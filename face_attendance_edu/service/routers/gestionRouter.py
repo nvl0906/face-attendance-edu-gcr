@@ -5,9 +5,9 @@ from fastapi.responses import FileResponse
 from fastapi.encoders import jsonable_encoder
 from starlette.background import BackgroundTask
 from supabase import AsyncClient
-from dependencies import get_current_user, get_supabase
-from utils.dataanalytics import Dataanalytics
-from schemas.gestionSchema import AddClassroomSchema, DownloadExcelSchema
+from face_attendance_edu.service.dependencies import get_current_user, get_supabase
+from face_attendance_edu.service.utils.dataanalytics import Dataanalytics
+from face_attendance_edu.service.schemas.gestionSchema import AddClassroomSchema, DownloadExcelSchema
 
 router = APIRouter()
 

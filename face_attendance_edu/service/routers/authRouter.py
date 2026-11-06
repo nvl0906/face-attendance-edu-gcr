@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from supabase import AsyncClient
-from utils.passwordhash import PasswordHasher
-from schemas.authSchema import LoginSchema, RegisterSchema
-from dependencies import create_access_token, get_supabase
+from face_attendance_edu.service.utils.passwordhash import PasswordHasher
+from face_attendance_edu.service.schemas.authSchema import LoginSchema, RegisterSchema
+from face_attendance_edu.service.dependencies import create_access_token, get_supabase
 
 router = APIRouter()
 

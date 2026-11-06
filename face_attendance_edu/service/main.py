@@ -6,7 +6,7 @@ from fastapi.responses import ORJSONResponse
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from supabase import acreate_client
-from  routers import authRouter, gestionRouter
+from face_attendance_edu.service.routers import authRouter, gestionRouter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
