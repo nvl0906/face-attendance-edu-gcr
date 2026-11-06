@@ -1,0 +1,55 @@
+import os
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import ORJSONResponse
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from supabase import acreate_client
+from  routers import authRouter, gestionRouter
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    url = os.getenv("FAE_SUPABASE_URL")
+    key = os.getenv("FAE_SUPABASE_KEY")
+    
+    supabase_client = await acreate_client(url, key)
+    
+    app.state.supabase = supabase_client
+
+    yield
+
+    await app.state.supabase.postgrest.aclose()
+
+app = FastAPI(default_response_class=ORJSONResponse, lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)  
+
+app.include_router(authRouter.router)
+app.include_router(gestionRouter.router)
+@app.get("/health")
+async def health():
+    return {
+        "status": "ok",
+        "model_loaded": getattr(app.state, "face_app", None) is not None,
+    }
+    
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    first_error = exc.errors()[0]
+    raw_msg = first_error["msg"]
+    
+    clean_msg = raw_msg.replace("Value error, ", "")
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"message": clean_msg, "field": first_error["loc"][-1]},
+    )
+
+
