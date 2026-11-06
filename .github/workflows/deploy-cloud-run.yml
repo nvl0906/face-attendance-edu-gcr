@@ -34,4 +34,5 @@ jobs:
             --config deploy_face_attendance_edu_to_gcr.yaml \
             --region "$LOCATION" \
             --project "$PROJECT_ID" \
+            --gcs-source-staging-dir="gs://${PROJECT_ID}_cloudbuild/source" \
             --substitutions=_REPO_NAME=$REPO_NAME,_SERVICE_NAME=$SERVICE_NAME,_IMAGE_TAG=${GITHUB_SHA::7}
