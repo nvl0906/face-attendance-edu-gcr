@@ -37,7 +37,7 @@ app.include_router(gestionRouter.router)
 @app.get("/health")
 async def health():
     return {
-        "status": "Success",
+        "status": "Ok Success",
         "model_loaded": getattr(app.state, "face_app", None) is not None,
     }
     
