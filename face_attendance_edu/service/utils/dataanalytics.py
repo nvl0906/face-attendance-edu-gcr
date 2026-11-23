@@ -21,6 +21,7 @@ class Dataanalytics:
         "afternoon_attendance_rate": "Afternoon Rate (%)",
         "total_attendance_rate": "Total Rate (%)",
         "total_late_minutes": "Late (min)",
+        "penalty_count": "Penalties"
     }
 
     @staticmethod
@@ -57,11 +58,13 @@ class Dataanalytics:
         expected_col = get_column_letter(df.columns.get_loc("Expected Total (h)") + 1)
         rate_col = get_column_letter(df.columns.get_loc("Total Rate (%)") + 1)
         late_col = get_column_letter(df.columns.get_loc("Late (min)") + 1)
+        penalty_col = get_column_letter(df.columns.get_loc("Penalties") + 1)
 
         summary.cell(row=1, column=2, value="Total Hours")
         summary.cell(row=1, column=3, value="Expected Hours")
         summary.cell(row=1, column=4, value="Avg Rate (%)")
         summary.cell(row=1, column=5, value="Total Late (min)")
+        summary.cell(row=1, column=6, value="Total Penalties")
 
         for r in range(2, summary.max_row + 1):
             name_ref = f"A{r}"
@@ -80,6 +83,10 @@ class Dataanalytics:
             summary.cell(row=r, column=5).value = (
                 f"=SUMIF('Daily Presence'!{student_col}2:{student_col}{last_daily_row},"
                 f"{name_ref},'Daily Presence'!{late_col}2:{late_col}{last_daily_row})"
+            )
+            summary.cell(row=r, column=6).value = (
+                f"=SUMIF('Daily Presence'!{student_col}2:{student_col}{last_daily_row},"
+                f"{name_ref},'Daily Presence'!{penalty_col}2:{penalty_col}{last_daily_row})"
             )
 
         wb.save(file_path)
