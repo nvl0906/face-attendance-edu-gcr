@@ -1,6 +1,7 @@
 import os
 from jose import jwt, JWTError
 from typing import Annotated
+import httpx
 from pydantic import BaseModel
 from fastapi import Request, HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -41,6 +42,29 @@ async def verify_token(token: str):
         return payload
     except JWTError:
         return None
+
+# Send sms
+async def send_sms(to: str, message: str) -> Dict[str, Any]:
+    """
+    Sends an SMS using the MMSDuck API.
+    """
+    url = os.environ.get("SMS_URL")
+    token = os.environ.get("SMS_KEY")
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "to": str("+261") + str(to),
+        "message": message
+    }
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        return response.json()
 
 # --- Resource Dependencies (Keep as def for speed) ---
 async def get_supabase(request: Request) -> AsyncClient:

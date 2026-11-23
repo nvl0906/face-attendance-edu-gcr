@@ -38,6 +38,14 @@ class AuthValidators:
         return v
 
     @staticmethod
+    def validate_phone(v: str) -> str:
+        if len(v) == 0:
+            raise ValueError("Le numéro de téléphone est requis.")
+        if not re.match(r'^\+?\d{10,15}$', v):
+            raise ValueError("Le numéro de téléphone doit être un numéro valide avec 10 à 15 chiffres.")
+        return v
+
+    @staticmethod
     def validate_fullname(v: str) -> str:
         if len(v) == 0:
             raise ValueError("Le nom complet est requis.")
@@ -61,6 +69,8 @@ ValidatedPassword = Annotated[str, BeforeValidator(AuthValidators.strip_string),
 
 ValidatedUsername = Annotated[str, BeforeValidator(AuthValidators.strip_string), AfterValidator(AuthValidators.validate_username)]
 
+ValidatedPhone = Annotated[str, BeforeValidator(AuthValidators.strip_string), AfterValidator(AuthValidators.validate_phone)]
+
 ValidatedFullname = Annotated[str, BeforeValidator(AuthValidators.strip_string), AfterValidator(AuthValidators.validate_fullname)]
 
 ValidatedConfirmPassword = Annotated[str, BeforeValidator(AuthValidators.strip_string), AfterValidator(AuthValidators.validate_confirmpassword)]
@@ -72,6 +82,7 @@ class LoginSchema(BaseModel):
 class RegisterSchema(BaseModel):
     fullname: ValidatedFullname
     username: ValidatedUsername
+    phone: ValidatedPhone
     password: ValidatedPassword
     confirmPassword: ValidatedConfirmPassword
     registertype: str

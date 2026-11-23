@@ -366,5 +366,3 @@ Next:
 For another app: copy .envrc, change SERVICE_NAME, REPO_NAME, GITHUB_REPO, SECRETS, CONFIG_FILE,
 DEPLOY_SCRIPT, and use a new PROVIDER and DEPLOYER (e.g. github-provider-app2, gh-deployer-app2).
 EOF
- 
-Claude finished the response
