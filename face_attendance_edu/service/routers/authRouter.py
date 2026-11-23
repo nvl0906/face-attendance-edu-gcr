@@ -53,6 +53,7 @@ async def register(data: RegisterSchema, db : AsyncClient = Depends(get_supabase
         response = await db.table("department").insert({
             "name": data.fullname,
             "login": data.username,
+            "phone_number": data.phone,
             "hashed_password": PasswordHasher.hash_password(data.password),
         }).execute()
     elif data.registertype == "student":
